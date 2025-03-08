@@ -73,3 +73,21 @@ setupSwagger(app);
 server.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
 
 export default app;
+
+
+// { "version": 2,
+// "builds": [
+//         {
+//           "src": "./src/index.ts", 
+//           "use": "@vercel/node"
+//         }
+//       ],
+//       "routes": [
+//         {
+//           "src": "./src/(.*)",
+//           "dest": "./src/index.ts"
+//         }
+//       ]
+   
+//  }
+
