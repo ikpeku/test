@@ -1,0 +1,579 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "AppSolute's API",
+    "version": "1.0.0"
+  },
+  "tags": [
+    { "name": "user", "description": "User related endpoints" },
+    { "name": "auth", "description": "Authentication related endpoints" },
+    { "name": "leaderboard", "description": "Leaderboard  related endpoints" },
+    { "name": "content", "description": "Content  related endpoints" }
+    
+ 
+  ],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter your bearer token in the format **Bearer <token>**"
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Get all users",
+        "tags": ["user"],
+        "description": "Retrieve a list of users",
+        "responses": {
+          "200": { "description": "List of users" }
+        }
+      },
+      "put": {
+        "summary": "Update a user",
+        "tags": ["user"],
+        "description": "Update an existing user's information",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userData",
+            "in": "body",
+            "description": "Updated user data",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": { "type": "string" },
+                "role": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "User updated successfully" },
+          "404": { "description": "User not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a user",
+        "tags": ["user"],
+        "description": "Delete an existing user by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "User deleted successfully" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": [
+          "auth"
+        ],
+        "description": "Register a new user with email and name",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userData",
+            "in": "body",
+            "description": "User data including email and name",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "john@example.com"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "dateOfBirth": {
+                  "type": "string",
+                  "example": "21-10-2000"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              },
+              "required": [
+                "email",
+                "name",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+   "/users/login": {
+  "post": {
+    "summary": "Login a user",
+    "tags": ["auth"],
+    "description": "Authenticate a user using their email and password.",
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "parameters": [
+      {
+        "name": "userData",
+        "in": "body",
+        "description": "User credentials including email and password",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "john@example.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "password123"
+            }
+          },
+          "required": ["email", "password"]
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "User logged in successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "description": "JWT access token",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "user": {
+                  "type": "object",
+                  "description": "Authenticated user details",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "12345"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "example": "john@example.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input provided",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Invalid email or password"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized - Incorrect email or password",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized access"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+,
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout a user",
+        "tags": [
+          "auth"
+        ],
+        "description": "Logout a user from the system",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User logged out successfully"
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Forgot password",
+        "tags": [
+          "auth"
+        ],
+        "description": "Send a password reset link to the user's email",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "body",
+            "description": "Email address of the user",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "john@example.com",
+                  "required": true,
+                  "description": "Email address of the user"
+                }
+              }
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password reset link sent successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Reset password",
+        "tags": [
+          "auth"
+        ],
+        "description": "Reset the user's password with a new one",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "resetData",
+            "in": "body",
+            "description": "Reset data including email, token and new password",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              },
+              "required": [
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password reset successful"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/leaderboard": {
+  "get": {
+    "summary": "Get leaderboard",
+    "tags": ["leaderboard"],
+    "description": "Retrieve the leaderboard with top users based on their scores. Includes user fullname.",
+    "parameters": [
+      {
+        "name": "limit",
+        "in": "query",
+        "description": "Number of top users to retrieve",
+        "required": false,
+        "type": "integer",
+        "default": 10
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of top users in the leaderboard",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "userId": { "type": "string", "example": "12345" },
+              "fullname": { "type": "string", "example": "John Doe" },
+              "score": { "type": "integer", "example": 1500 },
+              "answered": { "type": "integer", "example": 100 },
+              "rank": { "type": "integer", "example": 1 }
+            }
+          }
+        }
+      },
+      "400": { "description": "Invalid input" }
+    }
+  },
+  "post": {
+    "summary": "Add a leaderboard entry",
+    "tags": ["leaderboard"],
+    "description": "Create a new leaderboard entry for a user.",
+    "parameters": [
+      {
+        "name": "leaderboardData",
+        "in": "body",
+        "description": "Leaderboard entry details",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "userId": { "type": "string", "example": "12345", "format": "uuid" },
+            "score": { "type": "number", "example": 1200, "minimum": 0 },
+            "answered": { "type": "integer", "example": 50, "minimum": 0 }
+          },
+          "required": ["userId", "score"]
+        }
+      }
+    ],
+    "responses": {
+      "201": { "description": "Leaderboard entry created successfully" },
+      "400": { "description": "Invalid input" }
+    }
+  },
+  "put": {
+    "summary": "Update leaderboard entry",
+    "tags": ["leaderboard"],
+    "description": "Update the leaderboard score for a user.",
+    "parameters": [
+      {
+        "name": "userId",
+        "in": "body",
+        "description": "User ID and updated score",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "userId": { "type": "string", "example": "12345" },
+            "score": { "type": "number", "example": 1600, "minimum": 0 },
+            "answered": { "type": "integer", "example": 75, "minimum": 0 }
+          },
+          "required": ["userId", "score"]
+        }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Leaderboard entry updated successfully" },
+      "404": { "description": "User not found" },
+      "400": { "description": "Invalid input" }
+    }
+  }
+},
+"/posts": {
+  "get": {
+    "summary": "Get all blog posts",
+    "tags": ["blog Post"],
+    "description": "Retrieve a list of all blog posts. Optionally, filter by category or published status.",
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "description": "Filter posts by category",
+        "required": false,
+        "type": "string",
+        "enum": ["AI", "TECHNOLOGY", "MARKETING", "DESIGN", "SOFTWARE"]
+      },
+      {
+        "name": "isPublished",
+        "in": "query",
+        "description": "Filter posts by publication status",
+        "required": false,
+        "type": "boolean"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of blog posts",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "example": "12345" },
+              "title": { "type": "string", "example": "Exploring AI" },
+              "description": { "type": "string", "example": "A comprehensive guide to AI" },
+              "isPublished": { "type": "boolean", "example": true },
+              "imageUrl": { "type": "string", "example": "https://example.com/image.jpg" },
+              "category": { "type": "string", "example": "AI" }
+            }
+          }
+        }
+      },
+      "400": { "description": "Invalid input" }
+    }
+  },
+  "post": {
+    "summary": "Create a new blog post",
+    "tags": ["blog Post"],
+    "description": "Create a new blog post with the provided details.",
+    "parameters": [
+      {
+        "name": "postData",
+        "in": "body",
+        "description": "Details of the blog post to create",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "example": "Exploring AI" },
+            "description": { "type": "string", "example": "A comprehensive guide to AI" },
+            "isPublished": { "type": "boolean", "example": true },
+            "imageUrl": { "type": "string", "example": "https://example.com/image.jpg" },
+            "category": {
+              "type": "string",
+              "enum": ["AI", "TECHNOLOGY", "MARKETING", "DESIGN", "SOFTWARE"],
+              "example": "AI"
+            }
+          },
+          "required": ["title", "description", "imageUrl"]
+        }
+      }
+    ],
+    "responses": {
+      "201": { "description": "Blog post created successfully" },
+      "400": { "description": "Invalid input" }
+    }
+  },
+  "put": {
+    "summary": "Update a blog post",
+    "tags": ["blog Post"],
+    "description": "Update an existing blog post by ID.",
+    "parameters": [
+      {
+        "name": "postId",
+        "in": "path",
+        "description": "ID of the blog post to update",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "name": "postData",
+        "in": "body",
+        "description": "Updated blog post details",
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "example": "Updated AI Guide" },
+            "description": { "type": "string", "example": "An updated guide to AI" },
+            "isPublished": { "type": "boolean", "example": true },
+            "imageUrl": { "type": "string", "example": "https://example.com/new-image.jpg" },
+            "category": {
+              "type": "string",
+              "enum": ["AI", "TECHNOLOGY", "MARKETING", "DESIGN", "SOFTWARE"],
+              "example": "TECHNOLOGY"
+            }
+          },
+          "required": ["title", "description"]
+        }
+      }
+    ],
+    "responses": {
+      "200": { "description": "Blog post updated successfully" },
+      "404": { "description": "Blog post not found" },
+      "400": { "description": "Invalid input" }
+    }
+  },
+  "delete": {
+    "summary": "Delete a blog post",
+    "tags": ["blog post"],
+    "description": "Delete an existing blog post by ID.",
+    "parameters": [
+      {
+        "name": "postId",
+        "in": "path",
+        "description": "ID of the blog post to delete",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "responses": {
+      "200": { "description": "Blog post deleted successfully" },
+      "404": { "description": "Blog post not found" }
+    }
+  }
+}
+       
+  }
+}
