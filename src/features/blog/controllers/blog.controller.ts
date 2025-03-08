@@ -5,6 +5,22 @@ import { BadRequestError, UnAuthorizedError } from "../../../lib/appError";
 import appResponse from "../../../lib/appResponse";
 import { PostCategory } from "@prisma/client";
 
+
+declare global {
+  namespace Express {
+    // interface Request {
+    //   user: IUser
+    // }
+    interface  User {
+      id: string;
+      fullName?: string;
+      email: string;
+      role: "ADMIN" | "GUEST" | "SUPERADMIN";
+
+    }
+  }
+}
+
 class PostController {
   static async createPost(
     req: Request,

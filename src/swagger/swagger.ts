@@ -1,6 +1,6 @@
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import * as swaggerDocument from "../../swagger.json";
+import * as swaggerDocument from "../../swagger.json" ;
 import { Express } from "express";
 import path from "path";
 

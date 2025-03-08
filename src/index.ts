@@ -18,6 +18,29 @@ import http from "http";
 
 dotenv.config();
 
+// interface IUser {
+//   id: string;
+//   fullName?: string;
+//   email: string;
+//   role: "ADMIN" | "GUEST" | "SUPERADMIN";
+// }
+
+
+declare global {
+  namespace Express {
+    // interface Request {
+    //   user: IUser
+    // }
+    interface  User {
+      id: string;
+      fullName?: string;
+      email: string;
+      role: "ADMIN" | "GUEST" | "SUPERADMIN";
+
+    }
+  }
+}
+
 const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app); 

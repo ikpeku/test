@@ -35,7 +35,7 @@ class PostService {
       : ["TECHNOLOGY"];
   
    
-    const postContributors = Array.isArray(contributors) ? contributors : [];
+    const postContributors: string[] = Array.isArray(contributors) ? contributors : [];
   
     try {
       const post = await prisma.post.create({

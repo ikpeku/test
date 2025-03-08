@@ -1,14 +1,17 @@
 {
   "name": "appsolute",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "postinstall": "prisma generate",
-    "start": "node dist/index.js",
+    "start": "nodemon src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
-     "build": "prisma generate && prisma migrate deploy && tsc",
-    "prisma:generate": "prisma generate"
-  },
+    "build": "rimraf dist prisma generate && prisma migrate deploy && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+     "prisma:generate": "prisma generate",
+    "test": "echo \"Error: no test specified\" && exit 1"
+    },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -35,6 +38,8 @@
     "@types/swagger-schema-official": "^2.0.25",
     "@types/swagger-ui-express": "^4.1.7",
     "nodemon": "^3.1.7",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },

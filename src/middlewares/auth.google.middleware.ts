@@ -8,16 +8,16 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-declare global {
-  namespace Express {
-    interface User {
-      id: string;
-      fullName: string;
-      email: string;
-      role: "ADMIN" | "GUEST" | "SUPERADMIN";
-    }
-  }
-}
+// declare global {
+//   namespace Express {
+//     interface User {
+//       id: string;
+//       fullName: string;
+//       email: string;
+//       role: "ADMIN" | "GUEST" | "SUPERADMIN";
+//     }
+//   }
+// }
 
 interface User {
   id: string;

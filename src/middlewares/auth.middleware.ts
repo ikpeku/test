@@ -7,17 +7,17 @@ const prisma = new PrismaClient();
 
 import * as express from 'express';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string;
-        email: string;
-        role: 'ADMIN' | 'GUEST' | 'SUPERADMIN'; 
-      };
-    }
-  }
-}
+// declare global {
+//   namespace Express {
+//     interface Request {
+//       user?: {
+//         id: string;
+//         email: string;
+//         role: 'ADMIN' | 'GUEST' | 'SUPERADMIN'; 
+//       };
+//     }
+//   }
+// }
 
 
 
